@@ -1,0 +1,49 @@
+
+[1/5] Start a real LangGraph inventory service in a child process
+  Health check: http://127.0.0.1:8003/healthz → 200 OK
+
+[2/5] Discover the remote agent through its A2A v1 Agent Card
+  Agent: LangGraph Inventory Specialist
+  Skill: check_inventory_availability
+  Protocol: JSONRPC
+
+[3/5] Wrap the remote LangGraph agent as a MAF FunctionTool
+  Tool: check_inventory_via_a2a (max_invocations=1)
+
+[4/5] Send one order request across HTTP/JSON-RPC
+  Request: {"product":"火雞肉飯","quantity":20}
+  A2A update: # Inventory availability decision
+
+```json
+{
+  "status": "sufficient",
+  "request": {
+    "product": "火雞肉飯",
+    "quantity": 20
+  },
+  "observation": {
+    "observation_id": "20d49595-5275-4696-9d69-1c345bab36bd",
+    "product": "火雞肉飯",
+    "inventory": 30,
+    "observed_at": "2026-08-10T09:04:39.400041Z",
+    "source": "fixture",
+    "catalog_verified": true,
+    "warning": null
+  },
+  "can_fulfill": true,
+  "reason": "Observed inventory 30 is at least the requested quantity 20.",
+  "required_action": "Validate the catalog item and reserve stock before promising fulfillment."
+}
+```
+
+## Explanation
+Observed stock covers the requested quantity, subject to catalog validation and reservation.
+  Remote status: sufficient
+  Observed inventory: 30
+  Evidence source: fixture
+
+[5/5] Apply the outer order policy to the returned A2A artifact
+  Order policy: CONTINUE WITH CONTROLS
+  Required next action: Validate the catalog item and reserve stock before promising fulfillment.
+
+DEMO PASSED: MAF A2A tool → HTTP/JSON-RPC → LangGraph → A2A artifact

@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a change that preserves a fair framework comparison.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What limitation or teaching goal should this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: parity
+    attributes:
+      label: Comparison impact
+      description: Explain whether both framework implementations need an equivalent change.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Official documentation or source
+      description: Link primary evidence for framework-specific claims.
+    validations:
+      required: true

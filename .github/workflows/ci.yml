@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.0"
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install "${{ matrix.python-version }}"
+
+      - name: Install locked dependencies
+        run: uv sync --locked --all-groups --python "${{ matrix.python-version }}"
+
+      - name: Ruff
+        run: uv run --locked ruff check 01_coscup_inventory_demo.py scripts src tests
+
+      - name: Pyright
+        run: uv run --locked pyright 01_coscup_inventory_demo.py src tests
+
+      - name: Pytest
+        run: uv run --locked pytest
+
+      - name: Offline A2A demo
+        run: uv run --locked python 01_coscup_inventory_demo.py --port 8013
+
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.0"
+
+      - name: Build distributions
+        run: uv build

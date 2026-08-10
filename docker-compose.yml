@@ -1,0 +1,77 @@
+name: maf-langgraph-a2a
+
+x-agent-common: &agent-common
+  build:
+    context: .
+  env_file:
+    - ${ENV_FILE:-.env}
+  environment:
+    AZURE_CREDENTIAL_MODE: default
+  restart: unless-stopped
+
+services:
+  maf:
+    <<: *agent-common
+    command: ["maf-a2a-server"]
+    environment:
+      AZURE_CREDENTIAL_MODE: default
+      MAF_HOST: 0.0.0.0
+      MAF_PUBLIC_URL: http://127.0.0.1:8001/
+    ports:
+      - "127.0.0.1:8001:8001"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/healthz', timeout=2)",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  langgraph:
+    <<: *agent-common
+    command: ["langgraph-a2a-server"]
+    environment:
+      AZURE_CREDENTIAL_MODE: default
+      LANGGRAPH_HOST: 0.0.0.0
+      LANGGRAPH_PUBLIC_URL: http://127.0.0.1:8002/
+    ports:
+      - "127.0.0.1:8002:8002"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8002/healthz', timeout=2)",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  inventory-langgraph:
+    <<: *agent-common
+    command: ["langgraph-inventory-a2a-server"]
+    environment:
+      AZURE_CREDENTIAL_MODE: default
+      INVENTORY_AGENT_HOST: 0.0.0.0
+      INVENTORY_AGENT_PUBLIC_URL: http://127.0.0.1:8003/
+    ports:
+      - "127.0.0.1:8003:8003"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8003/healthz', timeout=2)",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
