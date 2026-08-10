@@ -28,9 +28,9 @@ uv run --locked python 01_coscup_inventory_demo.py \
 DEMO PASSED: MAF A2A tool → HTTP/JSON-RPC → LangGraph → A2A artifact
 ```
 
-![真實執行成功截圖](assets/demo-success.png)
+![macOS Terminal 實機執行成功截圖](assets/demo-success-terminal.png)
 
-上圖是 2026-08-10 實際執行 `01_coscup_inventory_demo.py` 的終端輸出，不是示意 mockup。完整文字紀錄在 [`assets/demo-output.txt`](assets/demo-output.txt)。`source=fixture` 是刻意保留的證據標籤，不代表 live inventory。
+上圖是 2026-08-10 在 macOS Terminal 實際執行 `01_coscup_inventory_demo.py` 後，直接擷取該 Terminal 視窗的 screenshot，不是重新排版的 transcript，也不是示意 mockup。另一次自動化執行的完整文字紀錄在 [`assets/demo-output.txt`](assets/demo-output.txt)；每次執行都會產生新的 observation UUID 與 timestamp，因此兩份證據的動態值會不同。`source=fixture` 是刻意保留的證據標籤，不代表 live inventory。
 
 ## Demo 到底做了什麼？
 
@@ -267,7 +267,7 @@ INVENTORY_FALLBACK_TO_FIXTURE=true
 │   ├── architecture.svg              # 可編輯架構圖
 │   ├── architecture.png              # README 架構圖片
 │   ├── demo-output.txt               # 真實執行文字紀錄
-│   └── demo-success.png              # 真實執行截圖
+│   └── demo-success-terminal.png     # macOS Terminal 實機截圖
 ├── src/agent_duet/
 │   ├── maf/                           # MAF Agent、tools、A2A executor/server
 │   ├── langgraph/                     # LangGraph Agent、tools、A2A executor/server
@@ -277,8 +277,7 @@ INVENTORY_FALLBACK_TO_FIXTURE=true
 ├── scripts/
 │   ├── demo.sh                        # 啟動 live services 並執行情境
 │   ├── check.sh                       # lint、type check、tests
-│   ├── capture_demo_output.py         # 真正執行 Demo 並保存 transcript
-│   └── render_terminal_screenshot.py  # 從實際 transcript 重建截圖
+│   └── capture_demo_output.py         # 真正執行 Demo 並保存 transcript
 ├── docs/                               # 架構、情境、官方來源與 code comparison
 ├── .env.example
 ├── pyproject.toml
