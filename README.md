@@ -176,6 +176,8 @@ pytest
 
 這條路徑需要 Azure subscription、Microsoft Foundry project、可呼叫的 model deployment，以及正確的 RBAC 權限。
 
+公開 clone 的 `.env.example` 與程式設定都預設使用 `INVENTORY_MODE=fixture`；只有依照本節明確切換為 `live` 時，才會呼叫公開的 Inventory API。
+
 ### 1. 安裝 Azure CLI 並登入
 
 macOS：

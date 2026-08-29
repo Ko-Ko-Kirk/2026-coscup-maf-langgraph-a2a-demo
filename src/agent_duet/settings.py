@@ -45,7 +45,7 @@ class Settings(BaseSettings):
     inventory_agent_public_url: HttpUrl = HttpUrl("http://127.0.0.1:8003/")
 
     inventory_api_url: HttpUrl = HttpUrl("https://koko-demo-api.azurewebsites.net/inventory/")
-    inventory_mode: Literal["live", "fixture"] = "live"
+    inventory_mode: Literal["live", "fixture"] = "fixture"
     inventory_timeout_seconds: float = Field(default=5.0, gt=0, le=30)
     inventory_max_attempts: int = Field(default=2, ge=1, le=3)
     inventory_retry_delay_seconds: float = Field(default=0.2, ge=0, le=5)
