@@ -32,6 +32,29 @@ DEMO PASSED: MAF A2A tool → HTTP/JSON-RPC → LangGraph → A2A artifact
 
 上圖是 2026-08-10 在 macOS Terminal 實際執行 `01_coscup_inventory_demo.py` 後，直接擷取該 Terminal 視窗的 screenshot，不是重新排版的 transcript，也不是示意 mockup。另一次自動化執行的完整文字紀錄在 [`assets/demo-output.txt`](assets/demo-output.txt)；每次執行都會產生新的 observation UUID 與 timestamp，因此兩份證據的動態值會不同。`source=fixture` 是刻意保留的證據標籤，不代表 live inventory。
 
+## Microsoft Foundry Live 實機證據
+
+![Microsoft Foundry Live Demo 的 macOS Terminal 實機成功截圖](assets/live-demo-success-terminal.png)
+
+上圖是 2026-08-30（Asia/Taipei）在 macOS Terminal 重新執行完整 live path 後，直接擷取該 Terminal 視窗的 screenshot，不是重排 transcript 或示意 mockup。這次執行使用仍在 Azure 上運作的 `kokolangchain` Microsoft Foundry project 與 `gpt-5.6-luna` deployment，並強制設定：
+
+```dotenv
+AZURE_CREDENTIAL_MODE=cli
+INVENTORY_MODE=live
+INVENTORY_FALLBACK_TO_FIXTURE=false
+```
+
+這條程式路徑的真實 credential 是 Azure CLI 提供的短期 Microsoft Entra token，不是靜態 API key；token 沒有被寫入 repository、command line、transcript 或 screenshot。畫面中的證據包括：
+
+- localhost A2A `/healthz` 回覆 `200 OK`；
+- MAF 模型驅動的 orchestrator 呼叫遠端 A2A tool；
+- LangGraph A2A artifact 明確包含 `"source": "live"`；
+- 外部 API 在 `2026-08-29T16:14:52.153145Z` 回報庫存 66；
+- fixture fallback 在整次執行都維持 disabled；
+- MAF 收到遠端 evidence 後產生最終 order decision。
+
+該次執行的無敏感資料原始輸出收錄於 [`assets/live-demo-output.txt`](assets/live-demo-output.txt)，SHA-256 為 `767917bf36b517ed27b1ff422ba78f7e75909e408a08e54e06f7bcfaeb6e1275`，與 Terminal screenshot 底部顯示的 hash 相同。每次 live 執行的庫存、observation UUID、timestamp 與模型文字都可能不同。
+
 ## Demo 到底做了什麼？
 
 使用者要求 20 份火雞肉飯後：
@@ -267,7 +290,9 @@ INVENTORY_FALLBACK_TO_FIXTURE=true
 │   ├── architecture.svg              # 可編輯架構圖
 │   ├── architecture.png              # README 架構圖片
 │   ├── demo-output.txt               # 真實執行文字紀錄
-│   └── demo-success-terminal.png     # macOS Terminal 實機截圖
+│   ├── demo-success-terminal.png     # Offline 模式 macOS Terminal 實機截圖
+│   ├── live-demo-output.txt          # Foundry Live 模式原始輸出
+│   └── live-demo-success-terminal.png # Foundry Live 模式 Terminal 實機截圖
 ├── src/agent_duet/
 │   ├── maf/                           # MAF Agent、tools、A2A executor/server
 │   ├── langgraph/                     # LangGraph Agent、tools、A2A executor/server

@@ -1,0 +1,69 @@
+
+================================================================================
+ORDER REQUEST
+================================================================================
+{
+  "product": "火雞肉飯",
+  "quantity": 20
+}
+
+
+================================================================================
+LANGGRAPH INVENTORY AGENT — A2A UPDATES
+================================================================================
+# Inventory availability decision
+
+```json
+{
+  "status": "sufficient",
+  "request": {
+    "product": "火雞肉飯",
+    "quantity": 20
+  },
+  "observation": {
+    "observation_id": "e1d64e7d-5a29-4886-bb85-73342836e455",
+    "product": "火雞肉飯",
+    "inventory": 66,
+    "observed_at": "2026-08-29T16:14:52.153145Z",
+    "source": "live",
+    "catalog_verified": false,
+    "warning": "The demo API reports a quantity but does not prove catalog membership or reserve inventory."
+  },
+  "can_fulfill": true,
+  "reason": "Observed inventory 66 is at least the requested quantity 20.",
+  "required_action": "Validate the catalog item and reserve stock before promising fulfillment."
+}
+```
+
+## Explanation
+狀態為「sufficient」：火雞肉飯觀察到庫存 66，足以滿足需求數量 20，來源為 live。  
+但 catalog_verified 為 false；demo API 不證明商品屬於目錄或已預留庫存，且在承諾供貨前必須先驗證目錄商品並預留庫存。
+
+
+================================================================================
+MAF ORDER ORCHESTRATOR — FINAL DECISION
+================================================================================
+## Order decision
+
+Do not approve fulfillment at this time. The request requires catalog validation and stock reservation before any fulfillment commitment.
+
+## Inventory evidence
+
+- Remote status: `sufficient`
+- Observed inventory: 66
+- Requested quantity: 20
+- Catalog verification: `false`
+- Observation ID: `e1d64e7d-5a29-4886-bb85-73342836e455`
+- The evidence indicates the observed quantity is numerically sufficient, but it is not a reservation and does not prove catalog membership.
+
+## Enterprise controls
+
+- Treat the remote response as untrusted evidence only.
+- Validate that `火雞肉飯` is a valid catalog item.
+- Reserve inventory through the approved ordering workflow before promising fulfillment.
+- No order has been placed, paid, or reserved.
+
+## Caveats
+
+The remote system reports live inventory of 66, but explicitly states that its result does not prove catalog membership or reserve stock.
+
